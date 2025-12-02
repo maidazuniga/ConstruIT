@@ -9,6 +9,8 @@ Su objetivo es simular el comportamiento de un usuario real para auditar el func
 2. [Requisitos Previos](#requisitos-previos)
 3. [Instalación](#instalación)
 4. [Configuración (.env)](#configuración-archivo-env)
+5. [Ejecución](#ejecución)
+6. [Solución de Problemas](#solución-de-problemas-comunes)
 
 ---
 
@@ -63,3 +65,21 @@ CLAVE_EMAIL=abcd efgh ijkl mnop
 
 # Correo de quien recibe el reporte
 EMAIL_DESTINO=correo_ejemplo@gmail.com
+```
+
+### Ejecución
+Para correr el bot manualmente, ejecuta el script principal desde tu terminal:
+
+```ini
+python main.py
+```
+
+El navegador se abrirá automáticamente, realizará las tareas y se cerrará al finalizar, enviando el correo correspondiente con el asunto " Reporte Diario ERP - *datetime*".
+
+### Solución de Problemas Comunes
+**Error: Username and Password not accepted al enviar correo**
+- Asegúrate de que en el archivo .env estás usando una Contraseña de Aplicación de Google y no tu contraseña normal.
+- Verifica que la "Verificación en 2 pasos" esté activada en tu cuenta de Google.
+
+**El bot falla al encontrar un elemento (TimeoutException)**
+- Si el diseño del ERP cambió, es posible que los IDs o Selectores hayan cambiado. Revisa el código y actualiza los By.ID usando F12 en el navegador.
