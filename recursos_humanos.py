@@ -70,18 +70,25 @@ def validar_calculo(driver, bot):
 
 def validar_liquidacion_sueldo(driver, bot):
     wait = WebDriverWait[Any](driver, 10)
-    bot.registrar_mensaje("Validando liquidación de sueldo...")
+    bot.registrar_mensaje("Validando liquidaciones de sueldo...")
 
     try:
         btn_liquidacion = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Remuneracion/Liquidacion']")))
         btn_liquidacion.click()
 
-        ## FALTA
+        elemento_titulo = wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_RLiquidacionFuncionarioLbl")))
+        texto_real = elemento_titulo.text.strip()
+        texto_esperado = "Liquidaciones de Sueldo"
+        
+        if texto_real == texto_esperado:
+            bot.registrar_mensaje(f"Validación exitosa.\n")
+        else:
+            bot.registrar_mensaje(f"ERROR: Se esperaba '{texto_esperado}' pero se encontró '{texto_real}'", es_error=True)
 
         time.sleep(1)
         
         driver.get(os.getenv('URL_BASE'))
         time.sleep(2)
     except Exception as e:
-        bot.registrar_mensaje(f"Error crítico en validación de liquidación de sueldo: {e}", es_error=True)
+        bot.registrar_mensaje(f"Error crítico en validación de liquidaciones de sueldo: {e}", es_error=True)
         raise e

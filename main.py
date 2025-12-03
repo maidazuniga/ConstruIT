@@ -93,6 +93,7 @@ def ejecutar_validacion():
                 if identificador == "rrhh":
                     recursos_humanos.validar_contratos(driver, bot)
                     recursos_humanos.validar_calculo(driver, bot)
+                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 # elif identificador == "obras":
                 #    obras.validar_presupuestos(driver, bot)
@@ -102,7 +103,6 @@ def ejecutar_validacion():
 
             except Exception:
                 bot.registrar_mensaje(f"Fallo al entrar o validar {modulo['nombre']}\n", es_error=True)
-                # Opcional: driver.get(os.getenv('URL')) # Volver al inicio si falla
 
     except Exception as e:
         bot.registrar_mensaje(f"Error general en el bot: {str(e)}", es_error=True)
