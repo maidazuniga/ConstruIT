@@ -28,6 +28,7 @@ def validar(driver, bot):
 
         boton_entrar.click()
         
+        bot.registrar_mensaje("Login exitoso\n")
         bot.registrar_mensaje("Verificando que aparezca la empresa...")
         
         try:
@@ -36,11 +37,11 @@ def validar(driver, bot):
             empresas_disponibles = len(dropdown.options)
 
             if empresas_disponibles > 0:
-                bot.registrar_mensaje(f"Verificación de empresa exitosa.")
+                bot.registrar_mensaje(f"Verificación exitosa.\n")
             else:
                 bot.registrar_mensaje(f"ERROR CRÍTICO: El selector de empresas está vacío.", es_error=True)
         
-            time.sleep(5) 
+            time.sleep(3) 
 
         except Exception as e:
             bot.registrar_mensaje(f"Error técnico buscando el selector: {str(e)}", es_error=True)
