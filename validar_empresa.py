@@ -41,7 +41,7 @@ def validar(driver, bot):
             else:
                 bot.registrar_mensaje(f"ERROR CRÍTICO: El selector de empresas está vacío.", es_error=True)
         
-            time.sleep(3) 
+            time.sleep(1) 
 
         except Exception as e:
             bot.registrar_mensaje(f"Error técnico buscando el selector: {str(e)}", es_error=True)

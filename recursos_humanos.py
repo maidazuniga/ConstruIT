@@ -1,8 +1,11 @@
+from typing import Any
+import time
+import os
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-import time
 
 def validar_contratos(driver, bot):
     wait = WebDriverWait(driver, 10)
@@ -30,6 +33,9 @@ def validar_contratos(driver, bot):
             bot.registrar_mensaje(f"ERROR: Se esperaba '{texto_esperado}' pero se encontró '{texto_real}'", es_error=True)
 
         time.sleep(1)
+
+        driver.get(os.getenv('URL_BASE'))
+        time.sleep(2)
         
     except Exception as e:
         bot.registrar_mensaje(f"Error crítico en validación de contratos: {e}", es_error=True)
@@ -37,8 +43,45 @@ def validar_contratos(driver, bot):
 
 
 def validar_calculo(driver, bot):
-    pass
+    wait = WebDriverWait[Any](driver, 10)
+    bot.registrar_mensaje("Validando cálculo...")
+
+    try:
+        btn_calculo = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Remuneracion/Calculo']")))
+        btn_calculo.click()
+
+        elemento_titulo = wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_Liquidaciones")))
+        texto_real = elemento_titulo.text.strip()
+        texto_esperado = "Cálculo"
+
+        if texto_real == texto_esperado:
+            bot.registrar_mensaje(f"Validación exitosa.\n")
+        else:
+            bot.registrar_mensaje(f"ERROR: Se esperaba '{texto_esperado}' pero se encontró '{texto_real}'", es_error=True)
+
+        time.sleep(1)
+        
+        driver.get(os.getenv('URL_BASE'))
+        time.sleep(2)
+    except Exception as e:
+        bot.registrar_mensaje(f"Error crítico en validación de cálculo: {e}", es_error=True)
+        raise e
 
 
 def validar_liquidacion_sueldo(driver, bot):
-    pass
+    wait = WebDriverWait[Any](driver, 10)
+    bot.registrar_mensaje("Validando liquidación de sueldo...")
+
+    try:
+        btn_liquidacion = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Remuneracion/Liquidacion']")))
+        btn_liquidacion.click()
+
+        ## FALTA
+
+        time.sleep(1)
+        
+        driver.get(os.getenv('URL_BASE'))
+        time.sleep(2)
+    except Exception as e:
+        bot.registrar_mensaje(f"Error crítico en validación de liquidación de sueldo: {e}", es_error=True)
+        raise e

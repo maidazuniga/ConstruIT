@@ -77,8 +77,8 @@ def ejecutar_validacion():
 
         for modulo in modulos:
             try:
-                driver.get(os.getenv('URL_BASE'))
-                time.sleep(2)
+                # driver.get(os.getenv('URL_BASE'))
+                # time.sleep(2)
 
                 bot.registrar_mensaje(f"--- Iniciando revisión de {modulo['nombre']} ---")
                 selector_link = f"a[href*='{modulo['href']}']"
@@ -92,6 +92,7 @@ def ejecutar_validacion():
 
                 if identificador == "rrhh":
                     recursos_humanos.validar_contratos(driver, bot)
+                    recursos_humanos.validar_calculo(driver, bot)
                 
                 # elif identificador == "obras":
                 #    obras.validar_presupuestos(driver, bot)
@@ -99,8 +100,8 @@ def ejecutar_validacion():
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
 
-            except Exception as e_mod:
-                bot.registrar_mensaje(f"Fallo al entrar o validar {modulo['nombre']}: {str(e_mod)}", es_error=True)
+            except Exception:
+                bot.registrar_mensaje(f"Fallo al entrar o validar {modulo['nombre']}\n", es_error=True)
                 # Opcional: driver.get(os.getenv('URL')) # Volver al inicio si falla
 
     except Exception as e:
