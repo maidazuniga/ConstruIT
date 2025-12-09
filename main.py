@@ -14,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import validar_empresa
 import recursos_humanos
+import subcontratos
 
 load_dotenv()
 
@@ -70,6 +71,7 @@ def ejecutar_validacion():
 
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
+        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"}
     ]
 
     try:
@@ -77,9 +79,6 @@ def ejecutar_validacion():
 
         for modulo in modulos:
             try:
-                # driver.get(os.getenv('URL_BASE'))
-                # time.sleep(2)
-
                 bot.registrar_mensaje(f"--- Iniciando revisión de {modulo['nombre']} ---")
                 selector_link = f"a[href*='{modulo['href']}']"
                 boton_modulo = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector_link)))
@@ -95,8 +94,8 @@ def ejecutar_validacion():
                     recursos_humanos.validar_calculo(driver, bot)
                     recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
-                # elif identificador == "obras":
-                #    obras.validar_presupuestos(driver, bot)
+                elif identificador == "subcontratos":
+                    subcontratos.validar_contratos(driver, bot)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
