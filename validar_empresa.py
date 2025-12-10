@@ -44,8 +44,10 @@ def validar(driver, bot):
             time.sleep(1) 
 
         except Exception as e:
-            bot.registrar_mensaje(f"Error técnico buscando el selector: {str(e)}", es_error=True)
+            bot.registrar_error(e, "Login / Empresa")
+            raise e  
     
     except Exception as e:
-        bot.registrar_mensaje(f"Error en el proceso de login: {str(e)}", es_error=True)
+        bot.registrar_error(e, "Login / Empresa")
+        raise e  
 

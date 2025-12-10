@@ -15,6 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import validar_empresa
 import recursos_humanos
 import subcontratos
+import stock
 
 load_dotenv()
 
@@ -62,6 +63,26 @@ class BotValidaciones:
             print("Correo enviado exitosamente.")
         except Exception as e:
             print(f"Error al enviar correo: {e}")
+    
+    def registrar_error(self, e, seccion):
+        """
+        Recibe una excepción técnica (e) y la traduce a español simple
+        antes de guardarla en el reporte.
+        """
+        mensaje_sucio = str(e).split('\n')[0]
+        mensaje_limpio = mensaje_sucio
+
+        if "element click intercepted" in mensaje_sucio:
+            mensaje_limpio = "Algo tapó el botón y no se pudo hacer clic (Click Intercepted)."
+        elif "no such element" in mensaje_sucio:
+            mensaje_limpio = "No se encontró el elemento esperado en la pantalla."
+        elif "TimeoutException" in str(type(e)):
+            mensaje_limpio = "El sistema tardó demasiado (10s) y el elemento no apareció."
+        elif "stale element reference" in mensaje_sucio:
+            mensaje_limpio = "La página cambió y el elemento viejo ya no existe (Stale Element)."
+
+        self.registrar_mensaje(f"Error en {seccion}: {mensaje_limpio}", es_error=True)
+        print(f"\n[DEBUG TÉCNICO] {seccion}: {mensaje_sucio}\n")
 
 def ejecutar_validacion():
     bot = BotValidaciones()
@@ -71,7 +92,8 @@ def ejecutar_validacion():
 
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
-        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"}
+        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
+        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"}
     ]
 
     try:
@@ -90,12 +112,17 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    recursos_humanos.validar_contratos(driver, bot)
-                    recursos_humanos.validar_calculo(driver, bot)
-                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    pass
+                    # recursos_humanos.validar_contratos(driver, bot)
+                    # recursos_humanos.validar_calculo(driver, bot)
+                    # recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 elif identificador == "subcontratos":
-                    subcontratos.validar_contratos(driver, bot)
+                    pass
+                    # subcontratos.validar_contratos(driver, bot)
+
+                elif identificador == "stock":
+                    stock.validar_proceso_pedido(driver, bot)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

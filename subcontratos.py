@@ -1,6 +1,5 @@
 from typing import Any
 import time
-import os
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -25,10 +24,10 @@ def validar_contratos(driver, bot):
 
         time.sleep(1)
         
-        driver.get(os.getenv('URL_BASE'))
+        driver.back()
         time.sleep(2)
     except Exception as e:
-        bot.registrar_mensaje(f"Error crítico en validación de contratos: {e}", es_error=True)
+        bot.registrar_error(e, "Módulo Subcontratos")
         raise e
 
 
