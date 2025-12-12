@@ -112,17 +112,18 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    pass
-                    # recursos_humanos.validar_contratos(driver, bot)
-                    # recursos_humanos.validar_calculo(driver, bot)
-                    # recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    # pass
+                    recursos_humanos.validar_contratos(driver, bot)
+                    recursos_humanos.validar_calculo(driver, bot)
+                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 elif identificador == "subcontratos":
-                    pass
-                    # subcontratos.validar_contratos(driver, bot)
+                    # pass
+                    subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
-                    stock.validar_proceso_pedido(driver, bot)
+                    num_pedido = stock.validar_proceso_pedido(driver, bot)
+                    print(f'pedido #{num_pedido}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

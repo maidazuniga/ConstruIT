@@ -17,6 +17,7 @@ def validar_contratos(driver, bot):
         try:
             wait_popup = WebDriverWait(driver, 3)
             btn_cancelar = wait_popup.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".swal2-cancel")))
+            time.sleep(1)
             driver.execute_script("arguments[0].click();", btn_cancelar)
             
         except TimeoutException:
