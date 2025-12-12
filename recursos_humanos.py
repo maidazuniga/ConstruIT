@@ -1,6 +1,5 @@
 from typing import Any
 import time
-import os
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,6 +17,7 @@ def validar_contratos(driver, bot):
         try:
             wait_popup = WebDriverWait(driver, 3)
             btn_cancelar = wait_popup.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".swal2-cancel")))
+            time.sleep(1)
             driver.execute_script("arguments[0].click();", btn_cancelar)
             
         except TimeoutException:
@@ -34,11 +34,11 @@ def validar_contratos(driver, bot):
 
         time.sleep(1)
 
-        driver.get(os.getenv('URL_BASE'))
+        driver.back()
         time.sleep(2)
         
     except Exception as e:
-        bot.registrar_mensaje(f"Error crítico en validación de contratos: {e}", es_error=True)
+        bot.registrar_error(e, "Módulo Recursos Humanos")
         raise e
 
 
@@ -61,10 +61,10 @@ def validar_calculo(driver, bot):
 
         time.sleep(1)
         
-        driver.get(os.getenv('URL_BASE'))
+        driver.back()
         time.sleep(2)
     except Exception as e:
-        bot.registrar_mensaje(f"Error crítico en validación de cálculo: {e}", es_error=True)
+        bot.registrar_error(e, "Módulo Recursos Humanos")
         raise e
 
 
@@ -87,8 +87,8 @@ def validar_liquidacion_sueldo(driver, bot):
 
         time.sleep(1)
         
-        driver.get(os.getenv('URL_BASE'))
+        driver.back()
         time.sleep(2)
     except Exception as e:
-        bot.registrar_mensaje(f"Error crítico en validación de liquidaciones de sueldo: {e}", es_error=True)
+        bot.registrar_error(e, "Módulo Recursos Humanos")
         raise e

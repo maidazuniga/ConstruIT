@@ -14,6 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import validar_empresa
 import recursos_humanos
+import subcontratos
+import stock
 
 load_dotenv()
 
@@ -61,6 +63,26 @@ class BotValidaciones:
             print("Correo enviado exitosamente.")
         except Exception as e:
             print(f"Error al enviar correo: {e}")
+    
+    def registrar_error(self, e, seccion):
+        """
+        Recibe una excepción técnica (e) y la traduce a español simple
+        antes de guardarla en el reporte.
+        """
+        mensaje_sucio = str(e).split('\n')[0]
+        mensaje_limpio = mensaje_sucio
+
+        if "element click intercepted" in mensaje_sucio:
+            mensaje_limpio = "Algo tapó el botón y no se pudo hacer clic (Click Intercepted)."
+        elif "no such element" in mensaje_sucio:
+            mensaje_limpio = "No se encontró el elemento esperado en la pantalla."
+        elif "TimeoutException" in str(type(e)):
+            mensaje_limpio = "El sistema tardó demasiado (10s) y el elemento no apareció."
+        elif "stale element reference" in mensaje_sucio:
+            mensaje_limpio = "La página cambió y el elemento viejo ya no existe (Stale Element)."
+
+        self.registrar_mensaje(f"Error en {seccion}: {mensaje_limpio}", es_error=True)
+        print(f"\n[DEBUG TÉCNICO] {seccion}: {mensaje_sucio}\n")
 
 def ejecutar_validacion():
     bot = BotValidaciones()
@@ -70,6 +92,8 @@ def ejecutar_validacion():
 
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
+        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
+        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"}
     ]
 
     try:
@@ -77,9 +101,6 @@ def ejecutar_validacion():
 
         for modulo in modulos:
             try:
-                # driver.get(os.getenv('URL_BASE'))
-                # time.sleep(2)
-
                 bot.registrar_mensaje(f"--- Iniciando revisión de {modulo['nombre']} ---")
                 selector_link = f"a[href*='{modulo['href']}']"
                 boton_modulo = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector_link)))
@@ -91,12 +112,18 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
+                    # pass
                     recursos_humanos.validar_contratos(driver, bot)
                     recursos_humanos.validar_calculo(driver, bot)
                     recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
-                # elif identificador == "obras":
-                #    obras.validar_presupuestos(driver, bot)
+                elif identificador == "subcontratos":
+                    # pass
+                    subcontratos.validar_contratos(driver, bot)
+
+                elif identificador == "stock":
+                    num_pedido = stock.validar_proceso_pedido(driver, bot)
+                    print(f'pedido #{num_pedido}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
