@@ -16,6 +16,7 @@ import validar_empresa
 import recursos_humanos
 import subcontratos
 import stock_pedidos
+import vb_pedidos
 
 load_dotenv()
 
@@ -82,7 +83,6 @@ class BotValidaciones:
             mensaje_limpio = "La página cambió y el elemento viejo ya no existe (Stale Element)."
 
         self.registrar_mensaje(f"Error en {seccion}: {mensaje_limpio}", es_error=True)
-        print(f"\n[DEBUG TÉCNICO] {seccion}: {mensaje_sucio}\n")
 
 def ejecutar_validacion():
     bot = BotValidaciones()
@@ -112,24 +112,23 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    # pass
                     recursos_humanos.validar_contratos(driver, bot)
                     recursos_humanos.validar_calculo(driver, bot)
                     recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 elif identificador == "subcontratos":
-                    # pass
                     subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
                     num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
                     print(f'pedido #{num_pedido}\n')
+                    vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
 
             except Exception:
-                bot.registrar_mensaje(f"Fallo al entrar o validar {modulo['nombre']}\n", es_error=True)
+                bot.registrar_mensaje(f"Hay 1 o más errores en el módulo {modulo['nombre']}\n", es_error=True)
 
     except Exception as e:
         bot.registrar_mensaje(f"Error general en el bot: {str(e)}", es_error=True)

@@ -11,9 +11,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 
 def validar_proceso_pedido(driver, bot):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 15)
     actions = ActionChains(driver)
-    bot.registrar_mensaje("Validando procesos de pedido...")
+    bot.registrar_mensaje("Validando creación de pedido...")
 
     try:
         btn_pedido = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Bodega/BodegaPedido']")))
@@ -108,7 +108,7 @@ def validar_proceso_pedido(driver, bot):
         driver.switch_to.default_content()        
 
         try:
-            wait_popup = WebDriverWait(driver, 3)
+            wait_popup = WebDriverWait(driver, 5)
             btn_ok = wait_popup.until(EC.element_to_be_clickable((By.ID, "popup_ok")))
             driver.execute_script("arguments[0].click();", btn_ok)
         except TimeoutException:
@@ -138,8 +138,8 @@ def validar_proceso_pedido(driver, bot):
         return num_pedido
 
     except Exception as e:
-        bot.registrar_error(e, "Módulo de Stock")
-        raise e
+        bot.registrar_error(e, "Módulo de Stock/Pedidos")
+        pass
 
 
 
