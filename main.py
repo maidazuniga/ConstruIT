@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import validar_empresa
 import recursos_humanos
 import subcontratos
-import stock
+import stock_pedidos
 
 load_dotenv()
 
@@ -122,7 +122,7 @@ def ejecutar_validacion():
                     subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
-                    num_pedido = stock.validar_proceso_pedido(driver, bot)
+                    num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
                     print(f'pedido #{num_pedido}\n')
 
                 else:
