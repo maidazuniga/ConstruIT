@@ -28,6 +28,6 @@ def validar_contratos(driver, bot):
         time.sleep(2)
     except Exception as e:
         bot.registrar_error(e, "Módulo Subcontratos")
-        raise e
+        pass
 
 

@@ -48,4 +48,4 @@ def visto_bueno_pedidos(driver, bot, num_pedido):
 
     except Exception as e:
         bot.registrar_error(e, "Módulo Stock/VB Pedidos")
-        raise e
+        pass
