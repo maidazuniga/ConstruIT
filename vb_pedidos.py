@@ -27,25 +27,16 @@ def visto_bueno_pedidos(driver, bot, num_pedido):
         
         wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_VBPedidosLbl")))
 
-        xpath_numero = f"//tr[contains(., '{num_pedido}')]/"
-        fila = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_numero)))
-        fila.click()
-        xpath_select_directo = f"{xpath_numero}//select[contains(@id, 'EstadoDDL')]"
+        xpath_pedido = f"//tr[./td[1]//div[normalize-space(.)='{num_pedido}']]/td[8]//select"
+        select_estado = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_pedido)))
+        select_estado.click()
 
-        try:
-            select_element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_select_directo)))
-
-        except TimeoutException as e:
-            bot.registrar_error(e, "Módulo Stock/VB Pedidos")
-            raise e
-
-        select_element.click()
         time.sleep(0.5) 
     
-        opcion_aprobado = select_element.find_element(By.XPATH, ".//option[@value='1']")
+        opcion_aprobado = select_estado.find_element(By.XPATH, ".//option[@value='1']")
         opcion_aprobado.click()
 
-        time.sleep(4)
+        time.sleep(1.5)
 
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
         btn_grabar.click()
