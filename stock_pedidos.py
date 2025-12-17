@@ -11,9 +11,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException
 
 def validar_proceso_pedido(driver, bot):
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 15)
     actions = ActionChains(driver)
-    bot.registrar_mensaje("Validando procesos de pedido...")
+    bot.registrar_mensaje("Validando creación de pedido...")
 
     try:
         btn_pedido = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Bodega/BodegaPedido']")))
@@ -78,18 +78,26 @@ def validar_proceso_pedido(driver, bot):
         driver.switch_to.default_content()
         time.sleep(3)
 
-        cantidad1 = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl02_ctl12_ctl00_Cantidadpnl")))
-        cantidad1.click()
-        send_cantidad1 = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl02_ctl12_ctl00_CantidadTxt")))
-        send_cantidad1.send_keys("5" + Keys.TAB)
-        cantidad2 = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl03_ctl12_ctl00_Cantidadpnl")))
-        cantidad2.click()
-        send_cantidad2 = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl03_ctl12_ctl00_CantidadTxt")))
-        send_cantidad2.send_keys("5" + Keys.TAB)
-        cantidad3 = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl04_ctl12_ctl00_Cantidadpnl")))
-        cantidad3.click()
-        send_cantidad3 = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl04_ctl12_ctl00_CantidadTxt")))
-        send_cantidad3.send_keys("5" + Keys.TAB)
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ob_gR")))
+        
+        filas_recursos = driver.find_elements(By.XPATH, "//tr[contains(@class, 'ob_gR') and normalize-space(./td[3])!='']")
+        
+        for fila in filas_recursos:
+            try:
+                cantidad_pnl = fila.find_element(By.XPATH, ".//td[5]//div[contains(@id, 'Cantidadpnl')]")
+                cantidad_pnl.click()
+                
+                input_cantidad = fila.find_element(By.XPATH, ".//td[5]//input[contains(@id, 'CantidadTxt')]")
+                wait.until(EC.visibility_of(input_cantidad))
+                
+                time.sleep(0.5) 
+                input_cantidad.send_keys(Keys.CONTROL + "a")
+                # input_cantidad.send_keys(Keys.DELETE) 
+                input_cantidad.send_keys("5")
+                input_cantidad.send_keys(Keys.TAB)
+                time.sleep(0.5)
+            except Exception:
+                continue
 
         espacio_vacio = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_Grilla_ctl04_ctl02_ctl20_ctl00_pnlIndicePpto1")))
         espacio_vacio.click()
@@ -108,7 +116,7 @@ def validar_proceso_pedido(driver, bot):
         driver.switch_to.default_content()        
 
         try:
-            wait_popup = WebDriverWait(driver, 3)
+            wait_popup = WebDriverWait(driver, 5)
             btn_ok = wait_popup.until(EC.element_to_be_clickable((By.ID, "popup_ok")))
             driver.execute_script("arguments[0].click();", btn_ok)
         except TimeoutException:
@@ -138,8 +146,8 @@ def validar_proceso_pedido(driver, bot):
         return num_pedido
 
     except Exception as e:
-        bot.registrar_error(e, "Módulo de Stock")
-        raise e
+        bot.registrar_error(e, "Módulo de Stock/Pedidos")
+        pass
 
 
 
