@@ -7,11 +7,12 @@ Su objetivo es simular el comportamiento de un usuario real para auditar el func
 ## Índice
 
 1. [Funcionalidades Principales](#funcionalidades-principales)
-2. [Requisitos Previos](#requisitos-previos)
-3. [Instalación](#instalación)
-4. [Configuración (.env)](#configuración-archivo-env)
-5. [Ejecución](#ejecución)
-6. [Solución de Problemas](#solución-de-problemas-comunes)
+2. [Estructura del Proyecto](#estructura-del-proyecto)
+3. [Requisitos Previos](#requisitos-previos)
+4. [Instalación](#instalación)
+5. [Configuración (.env)](#configuración-archivo-env)
+6. [Ejecución](#ejecución)
+7. [Solución de Problemas](#solución-de-problemas-comunes)
 
 ---
 
@@ -21,6 +22,19 @@ Su objetivo es simular el comportamiento de un usuario real para auditar el func
 * **Navegación Inteligente:** Uso de esperas explícitas (`WebDriverWait`) para manejar tiempos de carga asíncronos.
 * **Validación de Negocio:** Verifica que elementos críticos contengan datos válidos.
 * **Reporte vía Email:** Envía un correo con un resumen de la ejecución.
+
+---
+
+### Estructura del Proyecto
+
+El código está modularizado para facilitar el mantenimiento:
+
+* `main.py`: Orquestador principal. Inicia el navegador y llama a los módulos.
+* `validar_empresa.py`: Maneja el Login y selección de empresa.
+* `stock_pedidos.py`: Lógica para crear pedidos en bodega.
+* `vb_pedidos.py`: Lógica para buscar un pedido específico y aprobarlo.
+* `recursos_humanos.py`: Validaciones del módulo de personal.
+* `subcontratos.py`: Validaciones del módulo de contratos.
 
 ---
 
@@ -72,13 +86,22 @@ EMAIL_DESTINO=correo_ejemplo@gmail.com
 
 ### Ejecución
 
-Para correr el bot manualmente, ejecutar el script principal desde la terminal:
+Existen dos maneras de correr el bot.
+
+La primera, es de forma manual, ejecutando el script principal desde la terminal:
 
 ```ini
 python main.py
 ```
 
-El navegador se abrirá automáticamente, realizará las tareas y se cerrará al finalizar, enviando el correo correspondiente con el asunto " Reporte de Validaciones ERP - *datetime*".
+La segunda, es mediante la ejecución del archivo `main.exe`. Para esto, se deben seguir los siguientes pasos:
+1. Ir a la sección de **Releases** del repositorio y descargar el archivo `main.exe`.
+2. Crear una carpeta en el escritorio y mover los archivos `main.exe` y `.env`, con las credenciales correctamente configuradas, dentro de ella.
+3. Ejecutar `main.exe`.
+
+En ambos casos, el navegador se abrirá automáticamente, realizará las tareas y se cerrará al finalizar, enviando el correo correspondiente con el asunto " Reporte de Validaciones ERP - *datetime*".
+
+---
 
 ### Solución de Problemas Comunes
 
