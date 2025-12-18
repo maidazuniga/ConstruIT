@@ -45,9 +45,9 @@ def validar(driver, bot):
 
         except Exception as e:
             bot.registrar_error(e, "Login / Empresa")
-            raise e  
+            pass  
     
     except Exception as e:
         bot.registrar_error(e, "Login / Empresa")
-        raise e  
+        pass  
 

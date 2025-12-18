@@ -39,7 +39,7 @@ def validar_contratos(driver, bot):
         
     except Exception as e:
         bot.registrar_error(e, "Módulo Recursos Humanos")
-        raise e
+        pass
 
 
 def validar_calculo(driver, bot):
@@ -65,7 +65,7 @@ def validar_calculo(driver, bot):
         time.sleep(2)
     except Exception as e:
         bot.registrar_error(e, "Módulo Recursos Humanos")
-        raise e
+        pass
 
 
 def validar_liquidacion_sueldo(driver, bot):
@@ -91,4 +91,4 @@ def validar_liquidacion_sueldo(driver, bot):
         time.sleep(2)
     except Exception as e:
         bot.registrar_error(e, "Módulo Recursos Humanos")
-        raise e
+        pass

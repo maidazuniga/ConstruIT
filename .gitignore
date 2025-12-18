@@ -1,3 +1,11 @@
 .env
 __pycache__/
+.pytest_cache/
+tests/__pycache__/
 
+dist/
+build/
+*.spec
+*.exe
+
+venv/
