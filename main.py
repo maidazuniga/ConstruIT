@@ -17,6 +17,7 @@ import recursos_humanos
 import subcontratos
 import stock_pedidos
 import vb_pedidos
+import compras
 
 load_dotenv()
 
@@ -93,7 +94,8 @@ def ejecutar_validacion():
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
         {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
-        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"}
+        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"},
+        {"id": "compras", "href": "Compras", "id_contenedor": "Compras", "nombre": "Compras"}
     ]
 
     try:
@@ -112,17 +114,22 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    recursos_humanos.validar_contratos(driver, bot)
-                    recursos_humanos.validar_calculo(driver, bot)
-                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    pass
+                    # recursos_humanos.validar_contratos(driver, bot)
+                    # recursos_humanos.validar_calculo(driver, bot)
+                    # recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 elif identificador == "subcontratos":
-                    subcontratos.validar_contratos(driver, bot)
+                    pass
+                    # subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
                     num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
                     print(f'pedido #{num_pedido}\n')
                     vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
+
+                elif identificador == "compras":
+                    compras.generar_orden(driver, bot, num_pedido)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
