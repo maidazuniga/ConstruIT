@@ -5,7 +5,6 @@ import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import TimeoutException
 
 def visto_bueno_pedidos(driver, bot, num_pedido):
