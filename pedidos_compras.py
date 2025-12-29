@@ -88,10 +88,15 @@ def generar_orden(driver, bot, num_pedido):
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
         btn_grabar.click()
 
+        lbl_mensaje = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_MensajeLbl")))
+        enlace_numero = lbl_mensaje.find_element(By.TAG_NAME, "a")
+        num_orden = enlace_numero.text.strip()
+
         bot.registrar_mensaje("Validación exitosa.\n")
 
         driver.get(os.getenv('URL_BASE'))
         time.sleep(2)
+        return num_orden
 
     except Exception as e:
         bot.registrar_error(e, "Módulo Compras")

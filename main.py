@@ -18,6 +18,7 @@ import subcontratos
 import stock_pedidos
 import vb_pedidos
 import pedidos_compras
+import vb_orden_compras
 
 load_dotenv()
 
@@ -127,7 +128,8 @@ def ejecutar_validacion():
                     vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
 
                 elif identificador == "compras":
-                    pedidos_compras.generar_orden(driver, bot, num_pedido)
+                    num_orden = pedidos_compras.generar_orden(driver, bot, num_pedido)
+                    vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
