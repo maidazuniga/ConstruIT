@@ -13,8 +13,8 @@ def visto_bueno_orden_compra(driver, bot, num_orden):
     bot.registrar_mensaje(f"Validando aceptación de orden de compra N° {num_orden}...")
 
     try:       
-        btn_vb_pedido = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Compra/VBOrdenCompra']")))
-        btn_vb_pedido.click()
+        btn_vb_orden_compra = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Compra/VBOrdenCompra']")))
+        btn_vb_orden_compra.click()
 
         try:
             wait_popup = WebDriverWait(driver, 3)
@@ -30,21 +30,9 @@ def visto_bueno_orden_compra(driver, bot, num_orden):
         buscar_pedido = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_OrdenCompraDesdeTxt")))
         buscar_pedido.clear()
         buscar_pedido.send_keys(f"{num_orden}")
-        # bot.registrar_mensaje("pedido ingresado")
-
-        # try:
-        #     wait_popup = WebDriverWait(driver, 3)
-        #     btn_cancelar = wait_popup.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".swal2-cancel")))
-        #     time.sleep(1)
-        #     driver.execute_script("arguments[0].click();", btn_cancelar)
-            
-        # except TimeoutException:
-        #     pass
 
         btn_buscar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label6")))
-        # bot.registrar_mensaje("boton buscar encontrado")
         btn_buscar.click()
-        # bot.registrar_mensaje("boton buscar clickeado")
 
         xpath_orden = f"//tr[./td[2]//div[normalize-space(.)='{num_orden}']]/td[3]//select"
         select_estado = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_orden)))

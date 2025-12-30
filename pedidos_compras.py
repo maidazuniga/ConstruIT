@@ -15,8 +15,8 @@ def generar_orden(driver, bot, num_pedido):
     bot.registrar_mensaje("Validando pedidos para compras...")
     
     try:
-        btn_contratos = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Compra/PedidosParaCompra']")))
-        btn_contratos.click()
+        btn_pedido_compras = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Compra/PedidosParaCompra']")))
+        btn_pedido_compras.click()
 
         try:
             wait_popup = WebDriverWait(driver, 3)
