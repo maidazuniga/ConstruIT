@@ -45,7 +45,6 @@ def entrada(driver, bot, num_orden):
                 
                 time.sleep(0.5) 
                 input_cantidad.send_keys(Keys.CONTROL + "a")
-                # input_cantidad.send_keys(Keys.DELETE) 
                 input_cantidad.send_keys("5")
                 input_cantidad.send_keys(Keys.TAB)
                 time.sleep(0.5)

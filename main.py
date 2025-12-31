@@ -98,7 +98,7 @@ def ejecutar_validacion():
         {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
         {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"},
         {"id": "compras", "href": "Compras", "id_contenedor": "Compras", "nombre": "Compras"},
-        {"id": "stock_pt2", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"}
+        {"id": "entrada_y_salida", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"}
     ]
 
     try:
@@ -134,7 +134,7 @@ def ejecutar_validacion():
                     print(f'orden #{num_orden}\n')
                     vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
                 
-                elif identificador == "stock_pt2":
+                elif identificador == "entrada_y_salida":
                     num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
                     print(f'entrada #{num_entrada}\n')
 
