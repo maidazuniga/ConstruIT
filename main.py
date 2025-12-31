@@ -17,6 +17,9 @@ import recursos_humanos
 import subcontratos
 import stock_pedidos
 import vb_pedidos
+import pedidos_compras
+import vb_orden_compras
+import entrada_bodega
 
 load_dotenv()
 
@@ -93,7 +96,9 @@ def ejecutar_validacion():
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
         {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
-        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"}
+        {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"},
+        {"id": "compras", "href": "Compras", "id_contenedor": "Compras", "nombre": "Compras"},
+        {"id": "entrada_y_salida", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"}
     ]
 
     try:
@@ -123,6 +128,15 @@ def ejecutar_validacion():
                     num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
                     print(f'pedido #{num_pedido}\n')
                     vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
+
+                elif identificador == "compras":
+                    num_orden = pedidos_compras.generar_orden(driver, bot, num_pedido)
+                    print(f'orden #{num_orden}\n')
+                    vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
+                
+                elif identificador == "entrada_y_salida":
+                    num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
+                    print(f'entrada #{num_entrada}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

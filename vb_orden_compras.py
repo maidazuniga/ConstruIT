@@ -6,14 +6,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 
-def visto_bueno_pedidos(driver, bot, num_pedido):
+def visto_bueno_orden_compra(driver, bot, num_orden):
     wait = WebDriverWait(driver, 10)
-    bot.registrar_mensaje(f"Validando aceptación de pedido N° {num_pedido}...")
+    bot.registrar_mensaje(f"Validando aceptación de orden de compra N° {num_orden}...")
 
     try:       
-        btn_vb_pedido = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Bodega/VBPedidoDetalle']")))
-        btn_vb_pedido.click()
+        btn_vb_orden_compra = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Compra/VBOrdenCompra']")))
+        btn_vb_orden_compra.click()
 
         try:
             wait_popup = WebDriverWait(driver, 3)
@@ -24,10 +25,17 @@ def visto_bueno_pedidos(driver, bot, num_pedido):
         except TimeoutException:
             pass 
         
-        wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_VBPedidosLbl")))
+        wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_VBCotizacionesLbl")))
 
-        xpath_pedido = f"//tr[./td[1]//div[normalize-space(.)='{num_pedido}']]/td[8]//select"
-        select_estado = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_pedido)))
+        buscar_pedido = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_OrdenCompraDesdeTxt")))
+        buscar_pedido.clear()
+        buscar_pedido.send_keys(f"{num_orden}")
+
+        btn_buscar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label6")))
+        btn_buscar.click()
+
+        xpath_orden = f"//tr[./td[2]//div[normalize-space(.)='{num_orden}']]/td[3]//select"
+        select_estado = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_orden)))
         select_estado.click()
 
         time.sleep(0.5) 
@@ -46,5 +54,5 @@ def visto_bueno_pedidos(driver, bot, num_pedido):
         time.sleep(2)
 
     except Exception as e:
-        bot.registrar_error(e, "Módulo Stock/VB Pedidos")
+        bot.registrar_error(e, "Módulo Compras/VB Orden de Compra")
         pass
