@@ -20,6 +20,7 @@ import vb_pedidos
 import pedidos_compras
 import vb_orden_compras
 import entrada_bodega
+import salida_bodega
 
 load_dotenv()
 
@@ -137,6 +138,7 @@ def ejecutar_validacion():
                 elif identificador == "entrada_y_salida":
                     num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
                     print(f'entrada #{num_entrada}\n')
+                    salida_bodega.salida(driver, bot, num_pedido)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
