@@ -1,4 +1,3 @@
-# validar procesos de pedido
 from typing import Any
 import time
 import os
@@ -10,7 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
 def entrada(driver, bot, num_orden):
-    pass
     wait = WebDriverWait(driver, 10)
     bot.registrar_mensaje("Validando entrada a bodega...")
 
