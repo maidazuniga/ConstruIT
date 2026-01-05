@@ -1,4 +1,3 @@
-# validar procesos de pedido
 from typing import Any
 import time
 import os
@@ -10,12 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
 def entrada(driver, bot, num_orden):
-    pass
     wait = WebDriverWait(driver, 10)
     bot.registrar_mensaje("Validando entrada a bodega...")
 
     try:
-        btn_entrada = wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, "Entrada")))
+        selector = (By.XPATH, "//a[text()='Entrada' and contains(@href, 'Bodega/EntradaABodega')]")
+        btn_entrada = wait.until(EC.element_to_be_clickable(selector))
         btn_entrada.click()
 
         tipo_entrada = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_EntradaOCRB")))
