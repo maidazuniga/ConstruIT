@@ -21,6 +21,7 @@ import pedidos_compras
 import vb_orden_compras
 import entrada_bodega
 import salida_bodega
+import contable_financiero
 
 load_dotenv()
 
@@ -99,7 +100,8 @@ def ejecutar_validacion():
         {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
         {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"},
         {"id": "compras", "href": "Compras", "id_contenedor": "Compras", "nombre": "Compras"},
-        {"id": "entrada_y_salida", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"}
+        {"id": "entrada_y_salida", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"},
+        {"id": "contable", "href": "Contabilidad", "id_contenedor": "Contabilidad", "nombre": "Contable"}
     ]
 
     try:
@@ -139,6 +141,10 @@ def ejecutar_validacion():
                     num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
                     print(f'entrada #{num_entrada}\n')
                     salida_bodega.salida(driver, bot, num_pedido)
+
+                elif identificador == "contable":
+                    num_factura = contable_financiero.registro_factura(driver, bot, num_orden)
+                    print(f'factura #{num_factura}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
