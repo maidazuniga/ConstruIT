@@ -54,7 +54,7 @@ def visto_bueno_factura(driver, bot, num_factura, num_orden):
         except TimeoutException:
             pass
 
-        bot.registrar_mensaje("Validación exitosa.")
+        bot.registrar_mensaje("Validación exitosa.\n")
 
         url_base = os.getenv('URL_BASE')
         if not url_base: 
