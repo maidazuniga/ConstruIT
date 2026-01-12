@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import Select
 
 def visto_bueno_factura(driver, bot, num_factura, num_orden):
     wait = WebDriverWait(driver, 10)
-    bot.registrar_mensaje(f"Validando aceptación de factura N° {num_factura}...")
+    bot.registrar_mensaje(f"Validando vb de factura N° {num_factura}...")
 
     try:
         btn_vb_factura = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Contable/VBDocumentoContable']")))
@@ -48,10 +48,19 @@ def visto_bueno_factura(driver, bot, num_factura, num_orden):
 
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
         btn_grabar.click()
-
-        bot.registrar_mensaje("Validación exitosa.\n")
         
-        driver.get(os.getenv('URL_BASE'))
+        try:
+            wait.until(EC.url_contains("Mensaje.aspx"))
+        except TimeoutException:
+            pass
+
+        bot.registrar_mensaje("Validación exitosa.")
+
+        url_base = os.getenv('URL_BASE')
+        if not url_base: 
+            url_base = "/default.aspx"
+
+        driver.execute_script(f"window.location.href = '{url_base}';")
         time.sleep(2)
 
     except Exception as e:
