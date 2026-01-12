@@ -122,14 +122,12 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    pass
-                    # recursos_humanos.validar_contratos(driver, bot)
-                    # recursos_humanos.validar_calculo(driver, bot)
-                    # recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    recursos_humanos.validar_contratos(driver, bot)
+                    recursos_humanos.validar_calculo(driver, bot)
+                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
                 
                 elif identificador == "subcontratos":
-                    pass
-                    # subcontratos.validar_contratos(driver, bot)
+                    subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
                     num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
