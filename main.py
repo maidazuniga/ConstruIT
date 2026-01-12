@@ -22,6 +22,7 @@ import vb_orden_compras
 import entrada_bodega
 import salida_bodega
 import contable_financiero
+import vb_factura
 
 load_dotenv()
 
@@ -145,6 +146,7 @@ def ejecutar_validacion():
                 elif identificador == "contable":
                     num_factura = contable_financiero.registro_factura(driver, bot, num_orden)
                     print(f'factura #{num_factura}\n')
+                    vb_factura.visto_bueno_factura(driver, bot, num_factura, num_orden)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
