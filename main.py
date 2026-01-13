@@ -24,6 +24,7 @@ import salida_bodega
 import contable_financiero
 import vb_factura
 import centralizacion_factura
+import nomina
 
 load_dotenv()
 
@@ -150,6 +151,8 @@ def ejecutar_validacion():
                     vb_factura.visto_bueno_factura(driver, bot, num_factura, num_orden)
                     comprobante = centralizacion_factura.centralizar_factura(driver, bot, num_factura)
                     print(f'Comprobante #{comprobante}\n')
+                    num_nomina = nomina.nomina(driver, bot, num_factura)
+                    print(f'Nomina #{num_nomina}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

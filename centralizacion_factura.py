@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-fecha = datetime.now().strftime("%m/%d/%Y")
+fecha = datetime.now().strftime("%d/%m/%Y")
 
 def centralizar_factura(driver, bot, num_factura):
     wait = WebDriverWait(driver, 10)
@@ -27,7 +27,7 @@ def centralizar_factura(driver, bot, num_factura):
         btn_buscar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label6")))
         btn_buscar.click()
 
-        time.sleep(0.5)
+        time.sleep(1.5)
 
         box_factura = f"//tr[./td[5]//div[contains(., '{num_factura}')]]/td[2]//input[@type='checkbox']"
         factura = wait.until(EC.element_to_be_clickable((By.XPATH, box_factura)))
