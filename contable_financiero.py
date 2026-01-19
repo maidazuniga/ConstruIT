@@ -6,7 +6,6 @@ import random
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 
 def registro_factura(driver, bot, num_orden):
     wait = WebDriverWait(driver, 10)
