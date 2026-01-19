@@ -26,6 +26,7 @@ import vb_factura
 import centralizacion_factura
 import nomina
 import vb_nomina
+import pago_automatico
 
 load_dotenv()
 
@@ -156,6 +157,7 @@ def ejecutar_validacion():
                     print(f'Nomina #{num_nomina}\n')
                     comprobante_pago = vb_nomina.visto_bueno_nomina(driver, bot, num_nomina)
                     print(f'Comprobante pago #{comprobante_pago}\n')
+                    pago_automatico.pago_automatico(driver, bot, num_nomina)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
