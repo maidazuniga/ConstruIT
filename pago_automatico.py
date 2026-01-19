@@ -7,9 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-def visto_bueno_nomina(driver, bot, num_documento):
+def pago_automatico(driver, bot, num_documento):
     wait = WebDriverWait(driver, 10)
-    bot.registrar_mensaje(f"Validando vb de nomina N°{num_documento}...")
+    bot.registrar_mensaje(f"Validando pago automático N°{num_documento}...")
 
     try:
         btn_pago = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='Contable/PagoAutomatico']")))
@@ -24,21 +24,11 @@ def visto_bueno_nomina(driver, bot, num_documento):
 
             xpath_opcion = f"//div[@id='ob_iDdlNNominaDdlItemsContainer']//div[@class='t' and normalize-space(.)='{num_documento}']"
             
-            bot.registrar_mensaje(f"Buscando opción nómina: {num_documento}")
-            
             opcion = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_opcion)))
             opcion.click()
-            
-            bot.registrar_mensaje(f"Nómina {num_documento} seleccionada")
 
         except TimeoutException:
             bot.registrar_mensaje(f"No se encontró la nómina en la lista o el menú no se abrió.", es_error=True)
-        # except Exception as e:
-        #     try:
-        #         driver.execute_script("arguments[0].click();", driver.find_element(By.XPATH, xpath_opcion))
-        #         bot.registrar_mensaje("Nómina seleccionada con JS (Plan B)")
-        #     except:
-        #         bot.registrar_error(e, "Selección de Nómina")
 
         btn_buscar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label6")))
         btn_buscar.click()
@@ -60,5 +50,5 @@ def visto_bueno_nomina(driver, bot, num_documento):
         return comprobante
 
     except Exception as e:
-        bot.registrar_error(e, "Módulo Contable/VB Nomina")
+        bot.registrar_error(e, "Módulo Contable/Pago Automático")
         pass
