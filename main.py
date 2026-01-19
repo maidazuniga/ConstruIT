@@ -154,7 +154,8 @@ def ejecutar_validacion():
                     print(f'Comprobante #{comprobante}\n')
                     num_nomina = nomina.nomina(driver, bot, num_factura)
                     print(f'Nomina #{num_nomina}\n')
-                    vb_nomina.visto_bueno_nomina(driver, bot, num_nomina)
+                    comprobante_pago = vb_nomina.visto_bueno_nomina(driver, bot, num_nomina)
+                    print(f'Comprobante pago #{comprobante_pago}\n')
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

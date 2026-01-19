@@ -23,7 +23,7 @@ def registro_factura(driver, bot, num_orden):
         time.sleep(1.5)
 
         num_documento = wait.until(EC.presence_of_element_located((By.ID, "ctl00_phContenidoCentral_NroDocumentoTxt")))
-        num_documento.send_keys(str(random.randint(1000, 9999)))
+        num_documento.send_keys(str(random.randint(0000, 99999)))
         time.sleep(0.5)
 
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
