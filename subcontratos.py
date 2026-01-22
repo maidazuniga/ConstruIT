@@ -6,9 +6,8 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import TimeoutException
 
 def validar_contratos(driver, bot):
     wait = WebDriverWait(driver, 10)
@@ -56,7 +55,6 @@ def creacion_contrato(driver, bot):
     actions.double_click(celda).perform()
     driver.switch_to.default_content()
     time.sleep(1.5)
-    print('subcontratista seleccionado')
 
     input_area = wait.until(EC.element_to_be_clickable((By.ID, "ob_iDdlSAreaGestionDDLTB")))
     input_area.click()
@@ -110,26 +108,81 @@ def creacion_contrato(driver, bot):
     
     btn_continuar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_ContinuarLnk")))
     btn_continuar.click()
-    print('listo primera parte')
 
     # ---------
+
     tareas_contratadas =wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='#tabs-2']")))
     tareas_contratadas.click()
     time.sleep(1)
-    # select una cualquiera -> iframe
-    # agregar cuenta contable -> proveedores -> iframe -> aceptar
-    # grabar
-    # continuar
+
+    btn_agregar = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[title='Agregar Actividad desde Presupuesto']")))
+    btn_agregar.click()
+    iframe_agregar = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "iframe")))
+    driver.switch_to.frame(iframe_agregar)
+
+    btn_buscar_iframe2 = wait.until(EC.element_to_be_clickable((By.ID, "ob_iBBuscarBtnContainer")))
+    btn_buscar_iframe2.click()
+    time.sleep(1.5)
+    xpath_celda2 = f"//td[contains(., 'AFINADO DE RADIER')]"
+    celda2 = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_celda2)))
+    actions.double_click(celda2).perform()
+    time.sleep(0.5)
+    seleccionar_indice = wait.until(EC.element_to_be_clickable((By.ID, "ob_iBSeleccionarBtnContainer")))
+    seleccionar_indice.click()
+    driver.switch_to.default_content()
+
+    btn_lupa = wait.until(EC.element_to_be_clickable((By.XPATH, "//img[contains(@onclick, 'CuentaContableBusqueda')]")))
+    btn_lupa.click()
+    iframe_cuenta_contable  = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "iframe")))
+    driver.switch_to.frame(iframe_cuenta_contable)
+    time.sleep(1)
+
+    id_cuenta = "210300100"
+    celda_cuenta = wait.until(EC.element_to_be_clickable((By.ID, id_cuenta)))
+    actions.double_click(celda_cuenta).perform()
+    time.sleep(1)
+    
+    try:
+        WebDriverWait(driver, 5).until(EC.alert_is_present())
+        alerta = driver.switch_to.alert
+        print(f"Alerta detectada: {alerta.text}")
+        alerta.accept()
+
+    except TimeoutException:
+        pass
+    
+    driver.switch_to.default_content()
+
+    btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
+    btn_grabar.click()
+    
+    btn_continuar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_ContinuarLnk")))
+    btn_continuar.click()
+
     # ---------
-    # seleccionar clausulas
-    # agregar clausula -> iframe
-    # buscar
-    # select alguna
-    # seleccionar
-    # grabar
 
+    clausulas =wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href='#tabs-6']")))
+    clausulas.click()
+    time.sleep(1)
 
-    # inicio
-    # vb?
+    btn_clausula = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[title='Agregar Clausulas']")))
+    btn_clausula.click()
+    iframe_clausula = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "iframe")))
+    driver.switch_to.frame(iframe_clausula)
 
-    pass
+    btn_buscar_iframe3 = wait.until(EC.element_to_be_clickable((By.ID, "ob_iBBuscarBtnContainer")))
+    btn_buscar_iframe3.click()
+    time.sleep(1.5)
+
+    checkbox = f"//tr[./td[2]//div[contains(., '3')]]/td[1]//input[@type='checkbox']"
+    clausula = wait.until(EC.element_to_be_clickable((By.XPATH, checkbox)))
+    clausula.click()
+
+    seleccionar = wait.until(EC.element_to_be_clickable((By.ID, "ob_iBSeleccionarBtnContainer")))
+    seleccionar.click()
+    driver.switch_to.default_content()
+
+    btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
+    btn_grabar.click()
+    time.sleep(1)
+
