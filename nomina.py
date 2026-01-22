@@ -9,7 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 mes_pago = datetime.now().month + 1
-fecha_pago = datetime.now().strftime(f"%d-{mes_pago}-%Y")
+if mes_pago > 12:
+    mes_pago -= 12
+    ano_pago = datetime.now().year + 1
+else:
+    ano_pago = datetime.now().year
+fecha_pago = datetime.now().strftime(f"{datetime.now().day:02d}-{mes_pago:02d}-{ano_pago}")
 fecha_actual = datetime.now().strftime(f"%d-%m-%Y")
 
 def nomina(driver, bot, num_documento):
