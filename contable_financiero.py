@@ -27,6 +27,7 @@ def registro_factura(driver, bot, num_orden):
 
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
         btn_grabar.click()
+        bot.frenar_si_duplicado(driver)
 
         lbl_mensaje = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_MensajeLbl")))
         enlace_numero = lbl_mensaje.find_element(By.TAG_NAME, "a")

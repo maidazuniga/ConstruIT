@@ -2,6 +2,7 @@ import os
 import smtplib
 from datetime import datetime
 import time
+import sys
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -11,6 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 import validar_empresa
 import recursos_humanos
@@ -74,6 +76,53 @@ class BotValidaciones:
             print("Correo enviado exitosamente.")
         except Exception as e:
             print(f"Error al enviar correo: {e}")
+    
+    def frenar_si_duplicado(self, driver):
+        """
+        Verifica si aparece una alerta o mensaje de 'dato repetido'.
+        Si encuentra uno, cierra el navegador y DETIENE el script inmediatamente.
+        """
+        
+        try:
+            WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert = driver.switch_to.alert
+            texto_alerta = alert.text.lower()
+            
+            palabras_clave = ["repetido", "existe", "duplicado", "ya ingresado"]
+            
+            if any(palabra in texto_alerta for palabra in palabras_clave):
+                mensaje_final = f"⛔ ERROR: Se detectó un número de documento duplicado. Mensaje: {alert.text}"
+                self.registrar_mensaje(mensaje_final, es_error=True)
+                
+                alert.accept()
+                
+                self.registrar_mensaje("\n!!! DETENIENDO EJECUCIÓN !!!")
+                self.registrar_mensaje('\n Se recomienda volver a correr manualmente')
+                self.enviar_reporte_correo()
+                driver.quit()
+                sys.exit(1) 
+            else:
+                alert.accept() 
+
+        except TimeoutException:
+            pass
+
+        try:
+            lbl = driver.find_element(By.ID, "ctl00_phContenidoCentral_MensajeLbl")
+            if lbl.is_displayed():
+                texto_lbl = lbl.text.lower()
+                if "repetido" in texto_lbl or "ya existe" in texto_lbl or "duplicado" in texto_lbl:
+                    mensaje_final = f"ERROR: {lbl.text}"
+                    self.registrar_mensaje(mensaje_final, es_error=True)
+                    
+                    self.registrar_mensaje("\n!!! DETENIENDO EJECUCIÓN !!!")
+                    self.registrar_mensaje('\n Se recomienda volver a correr manualmente')
+                    self.enviar_reporte_correo()
+                    driver.quit()
+                    sys.exit(1)
+                    
+        except:
+            pass
     
     def registrar_error(self, e, seccion):
         """
