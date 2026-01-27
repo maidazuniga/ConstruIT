@@ -49,7 +49,19 @@ def visto_bueno_contrato(driver, bot, num_contrato):
 
         bot.registrar_mensaje("Validación exitosa.\n")
         
-        driver.get(os.getenv('URL_BASE'))
+        try:
+            wait.until(EC.url_contains("Mensaje.aspx"))
+        except TimeoutException:
+            pass
+
+        bot.registrar_mensaje("Validación exitosa.\n")
+        
+        url_base = os.getenv('URL_BASE')
+        if not url_base: 
+            url_base = "/default.aspx"
+
+        driver.execute_script(f"window.location.href = '{url_base}';")
+
         time.sleep(2)
 
     except Exception as e:

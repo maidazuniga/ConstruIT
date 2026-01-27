@@ -30,6 +30,7 @@ import centralizacion_factura
 import nomina
 import vb_nomina
 import pago_automatico
+import gestion_subcontrato
 
 load_dotenv()
 
@@ -175,41 +176,47 @@ def ejecutar_validacion():
                 identificador = modulo['id']
 
                 if identificador == "rrhh":
-                    recursos_humanos.validar_contratos(driver, bot)
-                    recursos_humanos.validar_calculo(driver, bot)
-                    recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    # recursos_humanos.validar_contratos(driver, bot)
+                    # recursos_humanos.validar_calculo(driver, bot)
+                    # recursos_humanos.validar_liquidacion_sueldo(driver, bot)
+                    pass
 
                 elif identificador == "stock":
-                    num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
-                    print(f'Pedido #{num_pedido}\n')
-                    vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
+                    # num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
+                    # print(f'Pedido #{num_pedido}\n')
+                    # vb_pedidos.visto_bueno_pedidos(driver, bot, num_pedido)
+                    pass
 
                 elif identificador == "compras":
-                    num_orden = pedidos_compras.generar_orden(driver, bot, num_pedido)
-                    print(f'Orden #{num_orden}\n')
-                    vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
-                
+                    # num_orden = pedidos_compras.generar_orden(driver, bot, num_pedido)
+                    # print(f'Orden #{num_orden}\n')
+                    # vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
+                    pass
+
                 elif identificador == "entrada_y_salida":
-                    num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
-                    print(f'Entrada #{num_entrada}\n')
-                    salida_bodega.salida(driver, bot, num_pedido)
+                    # num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
+                    # print(f'Entrada #{num_entrada}\n')
+                    # salida_bodega.salida(driver, bot, num_pedido)
+                    pass
 
                 elif identificador == "contable":
-                    num_factura = contable_financiero.registro_factura(driver, bot, num_orden)
-                    print(f'Factura #{num_factura}\n')
-                    vb_factura.visto_bueno_factura(driver, bot, num_factura, num_orden)
-                    comprobante = centralizacion_factura.centralizar_factura(driver, bot, num_factura)
-                    print(f'Comprobante #{comprobante}\n')
-                    num_nomina = nomina.nomina(driver, bot, num_factura)
-                    print(f'Nomina #{num_nomina}\n')
-                    comprobante_pago = vb_nomina.visto_bueno_nomina(driver, bot, num_nomina)
-                    print(f'Comprobante pago #{comprobante_pago}\n')
-                    pago_automatico.pago_automatico(driver, bot, num_nomina)
-                
+                    # num_factura = contable_financiero.registro_factura(driver, bot, num_orden)
+                    # print(f'Factura #{num_factura}\n')
+                    # vb_factura.visto_bueno_factura(driver, bot, num_factura, num_orden)
+                    # comprobante = centralizacion_factura.centralizar_factura(driver, bot, num_factura)
+                    # print(f'Comprobante #{comprobante}\n')
+                    # num_nomina = nomina.nomina(driver, bot, num_factura)
+                    # print(f'Nomina #{num_nomina}\n')
+                    # comprobante_pago = vb_nomina.visto_bueno_nomina(driver, bot, num_nomina)
+                    # print(f'Comprobante pago #{comprobante_pago}\n')
+                    # pago_automatico.pago_automatico(driver, bot, num_nomina)
+                    pass
+
                 elif identificador == "subcontratos":
                     num_contrato = subcontratos.validar_contratos(driver, bot)
                     print(f'Contrato #{num_contrato}\n')
                     vb_contrato.visto_bueno_contrato(driver, bot, num_contrato)
+                    gestion_subcontrato.gestion_subcontratista(driver, bot, num_contrato)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
