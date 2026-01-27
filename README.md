@@ -113,3 +113,5 @@ En ambos casos, el navegador se abrirá automáticamente, realizará las tareas 
 **El bot falla al encontrar un elemento (TimeoutException)**
 
 - Si el diseño del ERP cambió, es posible que los IDs o Selectores hayan cambiado. Revisar el código y actualizar los *By.ID*
+
+- En caso que la ejecución del programa se vea interrumpido por un error de número de documento, se recomienda volver a correr manualmente el archivo `main.exe`, ya que esto se debe a que el número arrojado aleatoriamente fue repetido y se debe intentar con otro número.

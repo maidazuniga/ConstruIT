@@ -2,6 +2,7 @@ import os
 import smtplib
 from datetime import datetime
 import time
+import sys
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -11,10 +12,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 import validar_empresa
 import recursos_humanos
 import subcontratos
+import vb_contrato
 import stock_pedidos
 import vb_pedidos
 import pedidos_compras
@@ -27,6 +30,8 @@ import centralizacion_factura
 import nomina
 import vb_nomina
 import pago_automatico
+import gestion_subcontrato
+import vb_estado_pago
 
 load_dotenv()
 
@@ -75,6 +80,53 @@ class BotValidaciones:
         except Exception as e:
             print(f"Error al enviar correo: {e}")
     
+    def frenar_si_duplicado(self, driver):
+        """
+        Verifica si aparece una alerta o mensaje de 'dato repetido'.
+        Si encuentra uno, cierra el navegador y DETIENE el script inmediatamente.
+        """
+        
+        try:
+            WebDriverWait(driver, 2).until(EC.alert_is_present())
+            alert = driver.switch_to.alert
+            texto_alerta = alert.text.lower()
+            
+            palabras_clave = ["repetido", "existe", "duplicado", "ya ingresado"]
+            
+            if any(palabra in texto_alerta for palabra in palabras_clave):
+                mensaje_final = f"⛔ ERROR: Se detectó un número de documento duplicado. Mensaje: {alert.text}"
+                self.registrar_mensaje(mensaje_final, es_error=True)
+                
+                alert.accept()
+                
+                self.registrar_mensaje("\n!!! DETENIENDO EJECUCIÓN !!!")
+                self.registrar_mensaje('\n Se recomienda volver a correr manualmente')
+                self.enviar_reporte_correo()
+                driver.quit()
+                sys.exit(1) 
+            else:
+                alert.accept() 
+
+        except TimeoutException:
+            pass
+
+        try:
+            lbl = driver.find_element(By.ID, "ctl00_phContenidoCentral_MensajeLbl")
+            if lbl.is_displayed():
+                texto_lbl = lbl.text.lower()
+                if "repetido" in texto_lbl or "ya existe" in texto_lbl or "duplicado" in texto_lbl:
+                    mensaje_final = f"ERROR: {lbl.text}"
+                    self.registrar_mensaje(mensaje_final, es_error=True)
+                    
+                    self.registrar_mensaje("\n!!! DETENIENDO EJECUCIÓN !!!")
+                    self.registrar_mensaje('\n Se recomienda volver a correr manualmente')
+                    self.enviar_reporte_correo()
+                    driver.quit()
+                    sys.exit(1)
+                    
+        except:
+            pass
+    
     def registrar_error(self, e, seccion):
         """
         Recibe una excepción técnica (e) y la traduce a español simple
@@ -102,11 +154,11 @@ def ejecutar_validacion():
 
     modulos = [
         {"id": "rrhh", "href": "Recurso-Humano", "id_contenedor": "Recurso-Humano", "nombre": "Recursos Humanos"},
-        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"},
         {"id": "stock", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Stock"},
         {"id": "compras", "href": "Compras", "id_contenedor": "Compras", "nombre": "Compras"},
         {"id": "entrada_y_salida", "href": "Bodega", "id_contenedor": "Bodega", "nombre": "Entrada/Salida"},
-        {"id": "contable", "href": "Contabilidad", "id_contenedor": "Contabilidad", "nombre": "Contable"}
+        {"id": "contable", "href": "Contabilidad", "id_contenedor": "Contabilidad", "nombre": "Contable"},
+        {"id": "subcontratos", "href": "SubContratos", "id_contenedor": "SubContratos", "nombre": "Subcontratos"}
     ]
 
     try:
@@ -128,9 +180,6 @@ def ejecutar_validacion():
                     recursos_humanos.validar_contratos(driver, bot)
                     recursos_humanos.validar_calculo(driver, bot)
                     recursos_humanos.validar_liquidacion_sueldo(driver, bot)
-                
-                elif identificador == "subcontratos":
-                    subcontratos.validar_contratos(driver, bot)
 
                 elif identificador == "stock":
                     num_pedido = stock_pedidos.validar_proceso_pedido(driver, bot)
@@ -141,7 +190,7 @@ def ejecutar_validacion():
                     num_orden = pedidos_compras.generar_orden(driver, bot, num_pedido)
                     print(f'Orden #{num_orden}\n')
                     vb_orden_compras.visto_bueno_orden_compra(driver, bot, num_orden)
-                
+
                 elif identificador == "entrada_y_salida":
                     num_entrada = entrada_bodega.entrada(driver, bot, num_orden)
                     print(f'Entrada #{num_entrada}\n')
@@ -159,6 +208,13 @@ def ejecutar_validacion():
                     print(f'Comprobante pago #{comprobante_pago}\n')
                     pago_automatico.pago_automatico(driver, bot, num_nomina)
 
+                elif identificador == "subcontratos":
+                    num_contrato = subcontratos.validar_contratos(driver, bot)
+                    print(f'Contrato #{num_contrato}\n')
+                    vb_contrato.visto_bueno_contrato(driver, bot, num_contrato)
+                    gestion_subcontrato.gestion_subcontratista(driver, bot, num_contrato)
+                    vb_estado_pago.visto_bueno_estado_de_pago(driver, bot, num_contrato)
+
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")
 
@@ -175,4 +231,3 @@ def ejecutar_validacion():
 
 if __name__ == "__main__":
     ejecutar_validacion()
-
