@@ -19,43 +19,7 @@ def gestion_subcontratista(driver, bot, num_contrato):
     wait = WebDriverWait(driver, 10)
     bot.registrar_mensaje(f"Validando gestion de subcontratista...")
 
-    try:       
-        # ### primero cambiar la fecha del periodo ###
-        # btn_workflow = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='SubContrato/WorkFlow']")))
-        # btn_workflow.click()
-
-        # mes_actual = datetime.now().month
-        # mes_formateado = f"{mes_actual:02d}" 
-
-        # try:
-        #     input_mes = wait.until(EC.element_to_be_clickable((By.ID, "ob_iDdlGeneralPeriodoContableDDLTB")))
-        #     input_mes.click()
-        #     wait.until(EC.visibility_of_element_located((By.ID, "ob_iDdlGeneralPeriodoContableDDLItemsContainer")))
-
-        #     xpath_opcion = f"//div[@id='ob_iDdlGeneralPeriodoContableDDLItemsContainer']//div[@class='v' and normalize-space(.)='{mes_formateado}']/parent::div"
-        #     opcion = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_opcion)))
-        #     opcion.click()
-
-        #     input_anio = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_AaaammTxt")))
-        #     input_anio.clear()
-        #     input_anio.send_keys(str(datetime.now().year))
-
-        #     input_periodo = wait.until(EC.element_to_be_clickable((By.ID, "ob_iDdlPeriodoDDLTB")))
-        #     input_periodo.click()
-        #     wait.until(EC.visibility_of_element_located((By.ID, "ob_iDdlPeriodoDDLItemsContainer")))
-
-        #     xpath_mensualidad = "//div[@id='ob_iDdlPeriodoDDLItemsContainer']//div[@class='v' and normalize-space(.)='0']/parent::div"
-        #     opcion = wait.until(EC.presence_of_element_located((By.XPATH, xpath_mensualidad)))
-        #     driver.execute_script("arguments[0].click();", opcion)
-
-        #     btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
-        #     btn_grabar.click()
-
-        # except Exception as e:
-        #     bot.registrar_error(e, "Selección de Periodo Contable")
-
-
-        ### después el proceso de gestion ###
+    try:
         btn_gestion = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='SubContrato/PantallaInicial']")))
         btn_gestion.click()
 
@@ -102,8 +66,6 @@ def gestion_subcontratista(driver, bot, num_contrato):
             wait.until(EC.url_contains("Mensaje.aspx"))
         except TimeoutException:
             pass
-
-        bot.registrar_mensaje("Validación exitosa.\n")
         
         url_base = os.getenv('URL_BASE')
         if not url_base: 
@@ -112,7 +74,9 @@ def gestion_subcontratista(driver, bot, num_contrato):
         driver.execute_script(f"window.location.href = '{url_base}';")
 
         time.sleep(2)
+
         registro_clausulas(driver, bot, num_contrato)
+        driver.get(os.getenv('URL_BASE'))
 
     except Exception as e:
         bot.registrar_error(e, "Módulo SubContrato/Gestion Subcontratista")
@@ -131,14 +95,29 @@ def registro_clausulas(driver, bot, num_contrato):
         btn_buscar.click()
         time.sleep(3)
 
-        xpath_checkbox = f"//tr[.//span[normalize-space(.)='{num_contrato}']]//input[contains(@id, 'AdjuntoChk')]"
-        checkbox = wait.until(EC.presence_of_element_located((By.XPATH, xpath_checkbox)))
-        driver.execute_script("arguments[0].click();", checkbox)
+        num_buscado = str(num_contrato).strip()
+        encontrado = False
+        filas = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tr[.//a[@title='Abrir']]")))
+
+        for fila in filas:
+            celda_id = fila.find_element(By.XPATH, ".//td[.//a[@title='Abrir']]//div[@class='ob_gCd']")
+            texto_id = celda_id.get_attribute("innerText").strip()
+
+            if texto_id == num_buscado:
+                checkbox = fila.find_element(By.XPATH, ".//input[contains(@id, 'AdjuntoChk')]")
+                driver.execute_script("arguments[0].click();", checkbox)
+                encontrado = True
+                break
+
+        if not encontrado:
+            bot.registrar_error(e, "Módulo SubContrato/Registro de claúsulas exigibles")
 
         time.sleep(2)
 
         btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
         btn_grabar.click()
+        time.sleep(1.5)
+
         bot.registrar_mensaje('Validación exitosa\n')
     
     except Exception as e:

@@ -7,12 +7,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-def visto_bueno_contrato(driver, bot, num_contrato):
+def visto_bueno_estado_de_pago(driver, bot, num_contrato):
     wait = WebDriverWait(driver, 10)
-    bot.registrar_mensaje(f"Validando visto bueno de contrato N° {num_contrato}...")
+    bot.registrar_mensaje(f"Validando visto bueno estado de pago...")
 
     try:       
-        btn_vb_contrato = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='SubContrato/VBContrato']")))
+        btn_vb_contrato = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "a[href*='SubContrato/VBEstadoPago']")))
         btn_vb_contrato.click()
 
         try:
@@ -29,9 +29,9 @@ def visto_bueno_contrato(driver, bot, num_contrato):
         btn_buscar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label6")))
         btn_buscar.click()
 
-        time.sleep(1)
+        time.sleep(2)
 
-        xpath_contrato = f"//tr[./td[2]//div[normalize-space(.)='{num_contrato}']]/td[6]//select"
+        xpath_contrato = f"//tr[./td[1]//div[normalize-space(.)='{num_contrato}']]/td[11]//select"
         select_estado = wait.until(EC.element_to_be_clickable((By.XPATH, xpath_contrato)))
         select_estado.click()
 
@@ -61,5 +61,5 @@ def visto_bueno_contrato(driver, bot, num_contrato):
         time.sleep(2)
 
     except Exception as e:
-        bot.registrar_error(e, "Módulo SubContrato/VB Contrato")
+        bot.registrar_error(e, "Módulo SubContrato/VB Estado de Pago")
         pass
