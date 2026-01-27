@@ -17,6 +17,7 @@ from selenium.common.exceptions import TimeoutException
 import validar_empresa
 import recursos_humanos
 import subcontratos
+import vb_contrato
 import stock_pedidos
 import vb_pedidos
 import pedidos_compras
@@ -206,7 +207,9 @@ def ejecutar_validacion():
                     pago_automatico.pago_automatico(driver, bot, num_nomina)
                 
                 elif identificador == "subcontratos":
-                    subcontratos.validar_contratos(driver, bot)
+                    num_contrato = subcontratos.validar_contratos(driver, bot)
+                    print(f'Contrato #{num_contrato}\n')
+                    vb_contrato.visto_bueno_contrato(driver, bot, num_contrato)
 
                 else:
                     bot.registrar_mensaje(f"No hay función definida para {modulo['nombre']}")

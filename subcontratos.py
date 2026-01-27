@@ -23,12 +23,16 @@ def validar_contratos(driver, bot):
 
         if texto_real == texto_esperado:
             creacion_contrato(driver, bot)
+            input_contrato = wait.until(EC.visibility_of_element_located((By.ID, "ctl00_phContenidoCentral_SNumeroContratoTxt")))
+            num_contrato = input_contrato.get_attribute("value")
+
             bot.registrar_mensaje(f"Validación exitosa.\n")
         else:
             bot.registrar_mensaje(f"ERROR: Se esperaba '{texto_esperado}' pero se encontró '{texto_real}'", es_error=True)
 
         driver.get(os.getenv("URL_BASE"))
         time.sleep(2)
+        return num_contrato
 
     except Exception as e:
         bot.registrar_error(e, "Módulo Subcontratos/Contratos")
@@ -184,5 +188,8 @@ def creacion_contrato(driver, bot):
 
     btn_grabar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_Label2")))
     btn_grabar.click()
+
+    btn_continuar = wait.until(EC.element_to_be_clickable((By.ID, "ctl00_phContenidoCentral_ContinuarLnk")))
+    btn_continuar.click()
     time.sleep(1)
 
